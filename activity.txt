@@ -6,3 +6,4 @@
 ✔ Fix auth bug - 2026-04-29T11:31:41.090Z
 ✔ Refactor logic - 2026-04-29T11:31:44.364Z
 ✔ Refactor logic - 2026-04-29T11:31:47.748Z
+✔ Add validation - 2026-04-29T11:31:49.694Z
