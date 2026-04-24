@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>URL Shortener</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+    }
+
+    .box {
+      max-width: 600px;
+      margin: 60px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .result {
+      background: #e7f3ff;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    input {
+      border-radius: 5px !important;
+    }
+
+    button {
+      border-radius: 5px !important;
+    }
+
+    table {
+      margin-top: 20px;
+    }
+
+    th {
+      background: #343a40;
+      color: #fff;
+      text-align: center;
+    }
+
+    td {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box text-center">
+
+  <h1>URL Shortener</h1>
+
+  <% if(locals.id) { %>
+    <div class="result">
+      <strong>Short URL:</strong><br>
+      http://localhost:8001/<%= id %>
+    </div>
+  <% } %>
+
+  <form method="POST" action="/url" class="mb-3">
+    <input type="text" name="url" class="form-control mb-2" placeholder="Enter URL..." required>
+    <button type="submit" class="btn btn-dark btn-block">Generate</button>
+  </form>
+
+  <% if(locals.urls) { %>
+    <table class="table table-bordered table-sm">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Short</th>
+          <th>Original</th>
+          <th>Clicks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% urls.forEach((url, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= url.shortId %></td>
+            <td style="max-width:150px; overflow:hidden; text-overflow:ellipsis;">
+              <%= url.redirectURL %>
+            </td>
+            <td><%= url.visitHistory.length %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+
+</div>
+
+</body>
+</html>
