@@ -1,7 +1,9 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 const {connectToMongoDB} = require('./connect');
 const URL = require('./models/url');
+const {restrictToLoggedinUserOnly,checkAuth} = require("./middlewares/auth");
 const app = express();
 const PORT = 8001;
 
@@ -20,25 +22,32 @@ app.set("views",path.resolve("./views"));
 
 app.use(express.json());
 app.use(express.urlencoded({extended:false})); 
+app.use(cookieParser()); 
 
-app.use('/',staticRoute);
-app.use("/url",urlRoute);
+app.use('/', checkAuth, staticRoute);
+app.use("/url", restrictToLoggedinUserOnly, urlRoute);
 app.use("/user",userRoute);
 
 
 app.get('/:shortId' , async (req,res)=>{
     const shortId = req.params.shortId;
-   const entry =  await URL.findOneAndUpdate({
-        shortId
-    }, 
-    {
-        $push:{
-            visitHistory:{
-                timestamp : Date.now(),
-            }
-        },  
-    });
-    res.redirect(entry.redirectURL); 
+
+    const entry = await URL.findOneAndUpdate(
+        { shortId },
+        {
+            $push:{
+                visitHistory:{
+                    timestamp : Date.now(),
+                }
+            },
+        }
+    );
+
+    if(!entry){
+        return res.send("❌ Short URL not found");
+    }
+
+    res.redirect(entry.redirectURL);
 });
 
 
