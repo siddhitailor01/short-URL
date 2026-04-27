@@ -7,10 +7,10 @@ router.get('/', async (req,res)=>{
 
     const allurls = await URL.find({ createdBy: req.user._id });
     
-    return res.render('home',{
-        urls: allurls,
-       
-    });
+  return res.render('home',{
+    urls: allurls,
+    query: req.query   // 🔥 ye missing tha
+});
 });
 
 router.get('/signup',(req,res)=>{
